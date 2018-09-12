@@ -7,6 +7,8 @@ elasticsearchPort: 9200
 externalAPIService: false
 # whether this ELB should be internet facing or private (default private)
 privateAPILoadBalancer: true
+# Port for the load balancer listener to use
+loadBalancerPort: 3100
 
 # the name of the Elasticsearch index to use
 apiIndexName: "pelias"
