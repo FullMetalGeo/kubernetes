@@ -12,6 +12,6 @@ spec:
     selector:
         app: pelias-api
     ports:
-        - protocol: TCP
+        - protocol: HTTP
           port: {{ .Values.loadBalancerPort }}
     type:{{ if .Values.externalAPIService }} LoadBalancer {{ else }} ClusterIP {{ end }}
