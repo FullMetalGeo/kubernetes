@@ -9,5 +9,5 @@ spec:
         app: pelias-api
     ports:
         - protocol: TCP
-          port: 3100
+          port: {{ .Values.loadBalancerPort }}
     type:{{ if .Values.externalAPIService }} LoadBalancer {{ else }} ClusterIP {{ end }}
