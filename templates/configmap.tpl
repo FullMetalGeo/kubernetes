@@ -84,7 +84,7 @@ data:
         },
         "openstreetmap": {
           "download": [{
-              "sourceURL": "https://ftp5.gwdg.de/pub/misc/openstreetmap/planet.openstreetmap.org/pbf/planet-latest.osm.pbf"
+              "sourceURL": "http://planet.us-east-1.mapzen.com/planet-latest.osm.pbf"
           }],
           "datapath": "/data/openstreetmap",
           "import": [{
