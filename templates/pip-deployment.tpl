@@ -14,43 +14,6 @@ spec:
       labels:
         app: pelias-pip
     spec:
-      initContainers:
-        - name: wof-import
-          image: pelias/pip-service:{{ .Values.pipDockerTag | default "latest" }}
-          command: ["npm", "run", "download"]
-          volumeMounts:
-            - name: config-volume
-              mountPath: /etc/config
-            - name: data-volume
-              mountPath: /data
-          env:
-            - name: PELIAS_CONFIG
-              value: "/etc/config/pelias.json"
-          resources:
-            limits:
-              memory: 3Gi
-              cpu: 4
-            requests:
-              memory: 1Gi
-              cpu: 0.1
-        - name: openaddresses-import
-          image: pelias/openaddresses:{{ .Values.pipDockerTag | default "latest" }}
-          command: ["sh", "-c", "npm run download && npm start"]
-          volumeMounts:
-            - name: config-volume
-              mountPath: /etc/config
-            - name: data-volume
-              mountPath: /data
-          env:
-            - name: PELIAS_CONFIG
-              value: "/etc/config/pelias.json"
-          resources:
-            limits:
-              memory: 3Gi
-              cpu: 4
-            requests:
-              memory: 1Gi
-              cpu: 0.1
       containers:
         - name: pelias-pip
           image: pelias/pip-service:{{ .Values.pipDockerTag | default "latest" }}
@@ -81,5 +44,3 @@ spec:
             items:
               - key: pelias.json
                 path: pelias.json
-        - name: data-volume
-          emptyDir: {}
