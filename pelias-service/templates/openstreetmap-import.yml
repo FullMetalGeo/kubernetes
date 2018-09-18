@@ -1,7 +1,7 @@
-apiVersion: extensions/v1beta1
+apiVersion: batch/v1
 kind: Job
 metadata:
-  name: wof-import
+  name: openstreetmap-import
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
@@ -12,14 +12,14 @@ spec:
   template:
     metadata:
       labels:
-        app: wof-import
+        app: openstreetmap-import
     spec:
       restartPolicy: Never
       containers:
-        - name: wof-import
-          image: pelias/pip-service:{{ .Values.pipDockerTag | default "latest" }}
+        - name: openstreetmap-import
+          image: pelias/openstreetmap:{{ .Values.pipDockerTag | default "latest" }}
           workingDir: /data
-          command: ["npm", "run", "download"]
+          command: ["sh", "-c", "npm run download && npm start"]
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
@@ -44,4 +44,4 @@ spec:
                 path: pelias.json
         - name: data-volume
           persistentVolumeClaim:
-            claimName: pelias-data-volume
+            claimName: "{{ .Release.Name }}-data-volume"

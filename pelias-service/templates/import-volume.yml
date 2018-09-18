@@ -2,17 +2,18 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: pelias-data-volume
+  name: "{{ .Release.Name }}-data-volume"
 {{- with .Values.persistence.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
   labels:
-    app: pelias-data-volume
+    app: "{{ .Release.Name }}-data-volume"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
+  autoSelector: true
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
   resources:

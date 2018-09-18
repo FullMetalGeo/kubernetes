@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pelias-json-configmap
+  name: "{{ .Release.Name }}-json-configmap"
 data:
   pelias.json: |
     {

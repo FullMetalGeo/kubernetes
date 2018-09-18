@@ -20,8 +20,6 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
-            - name: data-volume
-              mountPath: /data
           env:
             - name: PELIAS_CONFIG
               value: "/etc/config/pelias.json"

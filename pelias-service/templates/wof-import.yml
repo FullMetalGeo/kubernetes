@@ -1,7 +1,7 @@
-apiVersion: extensions/v1beta1
+apiVersion: batch/v1
 kind: Job
 metadata:
-  name: openaddresses-import
+  name: wof-import
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
@@ -12,14 +12,14 @@ spec:
   template:
     metadata:
       labels:
-        app: openaddresses-import
+        app: wof-import
     spec:
       restartPolicy: Never
       containers:
-        - name: openaddresses-import
-          image: pelias/openaddresses:{{ .Values.pipDockerTag | default "latest" }}
+        - name: wof-import
+          image: pelias/pip-service:{{ .Values.pipDockerTag | default "latest" }}
           workingDir: /data
-          command: ["sh", "-c", "npm run download && npm start"]
+          command: ["npm", "run", "download"]
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
@@ -44,4 +44,4 @@ spec:
                 path: pelias.json
         - name: data-volume
           persistentVolumeClaim:
-            claimName: pelias-data-volume
+            claimName: "{{ .Release.Name }}-data-volume"
