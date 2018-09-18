@@ -5,7 +5,7 @@ metadata:
   name: pelias-data-volume
 spec:
  accessModes:
-    - {{ .Values.accessMode | ReadWriteOnce }}
+    - {{ .Values.accessMode | ReadWriteMany }}
  resources:
    requests:
      storage: {{ .Values.capacity | 250Gi }}
