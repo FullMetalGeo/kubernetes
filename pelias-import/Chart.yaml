@@ -1,4 +1,4 @@
 apiVersion: v1
-description: Run a Pelias build
-name: pelias-build
+description: Run a Pelias import
+name: pelias-import
 version: 0.1.0
