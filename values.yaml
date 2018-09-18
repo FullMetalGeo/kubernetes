@@ -29,3 +29,6 @@ pipEnabled: true
 interpolationEnabled: false
 
 placeholderStoreURL: "https://s3.amazonaws.com/pelias-data.nextzen.org/placeholder/store.sqlite3.gz"
+
+accessMode: "ReadWriteMany"
+size: 250Gi

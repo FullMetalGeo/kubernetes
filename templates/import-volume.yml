@@ -4,8 +4,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: pelias-data-volume
 spec:
- accessModes:
+  accessModes:
     - {{ .Values.accessMode | ReadWriteMany }}
- resources:
-   requests:
-     storage: {{ .Values.capacity | 250Gi }}
+  size: {{ .Values.capacity | 250Gi }}
+  resources:
+    requests:
+      storage: {{ .Values.capacity | 250Gi }}
