@@ -12,10 +12,36 @@ feedback from anyone who has used them.
 
 ## Setup
 
+Getting a Pelias cluster up and running follows a few steps outlined below, namely:
+
+1. Setting up an Elasticsearch Cluster to store data
+2. Setting up a Kubernetes cluster to run Pelias and the importers
+3. Launching the Pelias application and associated services.
+4. Launching the Pelias importer apps to load data into Elasticsearch
+
+### Elasticsearch
+
+#### Option A: AWS Elasticsearch Service
+
+Use the Leone-Ops Elasticsearch template to create an Elasticsearch cluster.
+
+#### Option B: Create your own Elasticsearch Cluster
+
+Elasticsearch is used as the primary datastore for Pelias data. As a powerful database with built in
+scalability and replication abilities, it is not currently well suited for running in Kubernetes.
+
+Instead, it's preferable to create "regular" instances in your cloud provider or on your own
+hardware. To help with this, the `elasticsearch/` directory in this repository contains tools for
+setting up a production ready, Pelias compatible Elasticsearch cluster. It uses
+[Terraform](http://terraform.io/) and [Packer](http://packer.io/) to do this. See the directory
+[README](./elasticsearch/README.md) for more details.
+
+### Kubernetes
+
 First, set up a Kubernetes cluster however works best for you. A popular choice is to use
 [kops](https://github.com/kubernetes/kops) on AWS. The [Getting Started on AWS Guide](https://github.com/kubernetes/kops/blob/master/docs/aws.md) is a good starting point.
 
-### Sizing the Kubernetes cluster
+#### Sizing the Kubernetes cluster
 
 A working Pelias cluster contains the following services:
 * Pelias API (requires about 256MB of RAM) (**required**)
@@ -31,31 +57,28 @@ Some of the following importers will additionally have to be run to initially po
 * Geonames (requires ~0.5GB of RAM)
 * Polylines (requires 1GB of RAM)
 
-Finally, the importers require the PIP service to be running
+If using kops, it defaults to `t2.small` instances, which are far too small (they only have 2GB of ram).
+
+You can edit the instance types using `kops edit ig nodes` before starting your cluster. `m4.large` is a good choice to start.
+
+This means around 10GB of RAM is required to bring up all the services, and up to another 15GB of RAM is needed to
+run all the importers at once. 2 instances with 8GB of RAM each is a good starting point just for
+the services.
+
+### Launch Pelias Service
+
+Use the Helm chart found in `pelias-service/` to launch the Pelias service.  Make sure to update the `values.yml` file with your Elasticsearch connection info.
+
+### Import Pelias Data
+
+The importers require the PIP service to be running, ensure that all pods launched in the previous step are running before attempting to launch the import jobs.
 
 Use the[data sources](https://mapzen.com/documentation/search/data-sources/) documentation to decide
 which importers to be run.
 
 Importers can be run in any order, in parallel or one at a time.
 
-This means around 10GB of RAM is required to bring up all the services, and up to another 15GB of RAM is needed to
-run all the importers at once. 2 instances with 8GB of RAM each is a good starting point just for
-the services.
-
-If using kops, it defaults to `t2.small` instances, which are far too small (they only have 2GB of ram).
-
-You can edit the instance types using `kops edit ig nodes` before starting your cluster. `m4.large` is a good choice to start.
-
-## Elasticsearch
-
-Elasticsearch is used as the primary datastore for Pelias data. As a powerful database with built in
-scalability and replication abilities, it is not currently well suited for running in Kubernetes.
-
-Instead, it's preferable to create "regular" instances in your cloud provider or on your own
-hardware. To help with this, the `elasticsearch/` directory in this repository contains tools for
-setting up a production ready, Pelias compatible Elasticsearch cluster. It uses
-[Terraform](http://terraform.io/) and [Packer](http://packer.io/) to do this. See the directory
-[README](./elasticsearch/README.md) for more details.
+Use the chart in `pelias-import/` to launch the import jobs.  These will take awhile (4-5 days) to complete when importing the entire planet.
 
 # debuging 'init containers'
 
